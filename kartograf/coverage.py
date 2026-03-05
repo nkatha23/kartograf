@@ -1,13 +1,7 @@
 import ipaddress
 from kartograf.trie import IPTrie
-from kartograf.timed import timed
 
-@timed
 def coverage(map_file, ip_list_file, output_covered=None, output_uncovered=None):
-    print("Running coverage check...\n")
-
-    trie = IPTrie()
-    trie.from_map_file(map_file)
     addrs = []
     for line in ip_list_file:
         line = line.rstrip('\n')
@@ -21,6 +15,14 @@ def coverage(map_file, ip_list_file, output_covered=None, output_uncovered=None)
                   Invalid IPv4/IPv6 address provided: {line}.
                   Please remove and re-run.
                   """)
+    if len(addrs) == 0:
+        print("No IPs found in IP list file, cannot run coverage check.")
+        return
+
+    print("Running coverage check...")
+
+    trie = IPTrie()
+    trie.from_map_file(map_file)
 
     covered_pairs = []
     not_covered_ips = []
