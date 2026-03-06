@@ -54,3 +54,12 @@ def test_not_covered_ips_output():
     with open(cov_output_file, 'r') as f:
         cov_output = f.readlines()
     assert "134.26.21.1\n" in cov_output
+
+def test_empty_ip_list(capsys):
+    map_file_path, _ = fixtures()
+    with open(map_file_path, 'r') as f:
+        map_items = f.readlines()
+    ip_items = [] # empty file result
+    coverage(map_items, ip_items)
+    captured = capsys.readouterr()
+    assert "No IPs found in IP list file" in captured.out
